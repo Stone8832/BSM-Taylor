@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e4448d69-ebb6-4cdd-9852-3e4e64e93fca" name="Changes" comment="9/22/2025 8:50">
+    <list default="true" id="e4448d69-ebb6-4cdd-9852-3e4e64e93fca" name="Changes" comment="11/5/25 strike price sweep class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BSM.py" beforeDir="false" afterPath="$PROJECT_DIR$/BSM.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Taylor.py" beforeDir="false" afterPath="$PROJECT_DIR$/Taylor.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +57,26 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
 }</component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.Taylor">
+    <configuration name="BSM" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="BSM-Taylor" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/BSM.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Taylor" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="BSM-Taylor" />
       <option name="ENV_FILES" value="" />
@@ -79,6 +99,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.Taylor" />
+        <item itemvalue="Python.BSM" />
       </list>
     </recent_temporary>
   </component>
@@ -122,7 +143,15 @@
       <option name="project" value="LOCAL" />
       <updated>1758599423082</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="11/5/25 strike price sweep class">
+      <option name="closed" value="true" />
+      <created>1762379841696</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1762379841696</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -139,6 +168,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="9/2/2025 11:03" />
     <MESSAGE value="9/22/2025 8:50" />
-    <option name="LAST_COMMIT_MESSAGE" value="9/22/2025 8:50" />
+    <MESSAGE value="11/5/25 strike price sweep class" />
+    <option name="LAST_COMMIT_MESSAGE" value="11/5/25 strike price sweep class" />
   </component>
 </project>

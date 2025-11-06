@@ -2,34 +2,32 @@ import math
 import numpy as np
 from scipy.stats import norm
 
-#s = Stock Price, k = Strike Price, r = Risk free interest rate, sigma = volatility
+# Exact BSM call price
+def bsm_call_value(s, k, r, t, sigma):
+    if t <= 0 or sigma <= 0 or s <= 0 or k <= 0:
+        # degenerate / immediate payoff case
+        return max(s - k * math.exp(-r * t), 0.0)
 
-#Exact BSM formula
-def bsm_call_value(s, k, r, t,sigma):
-    d1 = (math.log(s / k) + (r + 0.5 * sigma**2) * t) / sigma * math.sqrt(t)
-    d2 = d1 - sigma * math.sqrt(t)
+    a = sigma * math.sqrt(t)  # sigma * sqrt(T)
+    d1 = (math.log(s / k) + (r + 0.5 * sigma**2) * t) / a
+    d2 = d1 - a
 
-    c = (s * norm.cdf(d1)) - (k* np.exp(-r * t) * norm.cdf(d2))
+    return s * norm.cdf(d1) - k * math.exp(-r * t) * norm.cdf(d2)
 
-    return c
-
-#Delta: First derivitive of c with respect to stock price
+# Delta: dC/dS = N(d1)
 def bsm_delta(s, k, r, t, sigma):
-    d1 = (math.log(s / k) + (r + 0.5 * sigma ** 2) * t) / sigma * math.sqrt(t)
-    return s * norm.cdf(d1)
+    if t <= 0 or sigma <= 0 or s <= 0 or k <= 0:
+        return 1.0 if s > k else 0.0
 
+    a = sigma * math.sqrt(t)
+    d1 = (math.log(s / k) + (r + 0.5 * sigma**2) * t) / a
+    return norm.cdf(d1)
+
+# Gamma: d²C/dS² = φ(d1) / (S * sigma * sqrt(T))
 def bsm_gamma(s, k, r, t, sigma):
-    d1 = (math.log(s / k) + (r + 0.5 * sigma ** 2) * t) / sigma * math.sqrt(t)
-    second = s * norm.pdf(d1) / (sigma * math.sqrt(t))
-    return d1 + second
+    if t <= 0 or sigma <= 0 or s <= 0 or k <= 0:
+        return 0.0
 
-
-
-
-
-
-#print(bsm_call_value(100, 100, 0.05, 1.0, 0.20))
-#print(bsm_delta(100, 100, 0.05, 1.0, 0.20))
-#print(bsm_gamma(100, 100, 0.05, 1.0, 0.20))
-
-#formulas are all working now
+    a = sigma * math.sqrt(t)
+    d1 = (math.log(s / k) + (r + 0.5 * sigma**2) * t) / a
+    return norm.pdf(d1) / (s * a)

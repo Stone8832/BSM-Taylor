@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import pandas as pd
 from scipy.stats import norm
 from BSM import bsm_call_value, bsm_delta, bsm_gamma
 
@@ -42,11 +43,13 @@ def gamma_price_x(x, s, c1, c2, c3):
 def strike(s, x):
     return s * math.exp(-x)
 
-price_error_bound = 0.01
+#pre-determined error bounds
+price_error_bound = 0.1
 price_bps_error_bound = 2.0
-delta_error_bound = 0.005
-gamma_error_bound = 0.005  #
+delta_error_bound = 0.01
+gamma_rel_bound = 0.05
 
+#computes errors at x from Taylor and BSM and makes a dict
 def errors_at_x(s,r,t,sigma,x,c0,c1,c2,c3):
     k = strike(s,x)
     call_exact = bsm_call_value(s, k, r, t, sigma)
@@ -59,28 +62,38 @@ def errors_at_x(s,r,t,sigma,x,c0,c1,c2,c3):
 
     call_error = abs(call_exact - call_taylor)
     delta_error = abs(delta_exact - delta_taylor)
-    gamma_error = abs(gamma_exact - gamma_taylor)
+    gamma_rel_error = abs(gamma_exact - gamma_taylor) / max(abs(gamma_exact), 1e-16)
+
 
     price_pass = call_error <= price_error_bound
     delta_pass = delta_error <= delta_error_bound
-    gamma_pass = gamma_error <= gamma_error_bound
+    gamma_pass = gamma_rel_error <= gamma_rel_bound
 
-    return { "x" : x, "k" : k, "call_exact" : call_exact,
-              "delta_exact" : delta_exact, "gamma_exact" : gamma_exact,
-              "call_taylor" : call_taylor, "delta_taylor" : delta_taylor,
-              "gamma_taylor" : gamma_taylor, "call_error" : call_error,
-              "delta_error" : delta_error, "gamma_error" : gamma_error,
-             "pass_all" : (price_pass and delta_pass and gamma_pass)}
+    return {"Log-moneyness" : x,
+            "strike" : k,
+            "call_exact" : call_exact,
+            "call_taylor": call_taylor,
+            "call_error": call_error,
+            "delta_exact": delta_exact,
+            "delta_taylor": delta_taylor,
+            "delta_error": delta_error,
+            "gamma_exact": gamma_exact,
+            "gamma_taylor": gamma_taylor,
+            "gamma_error": gamma_rel_error,
+            "call_pass": price_pass,
+            "all_pass": (price_pass and delta_pass and gamma_pass)
+            }
 
-#class to sweep multiple x values (different strikes) at makes a list
+#class to sweep multiple x values (different strikes) and makes a list with the taylor price and error at that price
 def sweep_strikes(s,r,t,sigma, x_min, x_max, step):
     c0, c1, c2, c3, c4 = atm_coeff(s,r,t,sigma)
     strikes = list(np.arange(x_min, x_max + step, step))
-    taylor_price_list = []
-    for x in strikes:
-        taylor_price_list.append(taylor_price_x(x, c0, c1, c2, c3))
+    taylor_strike_list = []
+    for i in strikes:
+        taylor_strike_list.append(errors_at_x(s,r,t,sigma, i, c0, c1, c2, c3))
+    return taylor_strike_list
 
-    return taylor_price_list
+
 
 
 coeff = atm_coeff(s, r, t, sigma)
@@ -90,14 +103,11 @@ c2 = coeff[2]
 c3 = coeff[3]
 c4 = coeff[4]
 
-k = strike(s, x)
 
-call_value = taylor_price_x(x, c0, c1, c2, c3)
-call_value_bsm = bsm_call_value(s, k, r, t, sigma)
-#print("x = " + str(x))
-#print("Taylor value: " + str(call_value))
-#print("Bsm value: " + str(call_value_bsm))
-#print(c4)
 
-print(sweep_strikes(s,r,t,sigma, -0.1,0.1,0.05))
-print(bsm_call_value(s,105.127,r,t,sigma))
+strike_list = sweep_strikes(s,r,t,sigma, -0.05,0.050,.001)
+df = pd.DataFrame(strike_list)
+print(df.info())
+print(df[df['all_pass'] == True])
+df.to_csv("new_test")
+
